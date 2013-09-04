@@ -38,14 +38,19 @@ define(function (require) {
 		/*
 		 * Get
 		 */
-		get: function (name, params, success, error) {
+		get: function (name, params, options) {
 			var hash = this._generateHash(name, params);
 			var cached = this.enabled && this.cache.hasOwnProperty(hash);
 			var resource, cacheEntry;
 
 			var logCache = cached;
 			if (!cached) {
-				resource = this._requestFromServer(this.constructorMap[name], name, params, success, error);
+				resource = this._requestFromServer(
+					this.constructorMap[name],
+					name,
+					params || {},
+					options || {}
+				);
 				this.cache[hash] = new CacheEntry(this, name, resource);
 			} else {
 				cacheEntry = this.cache[hash];
@@ -120,7 +125,7 @@ define(function (require) {
 		 */
 		invalidateDependencies: function (method, service) {
 			if (!this.invalidateMap.hasOwnProperty(service)) {
-				throw new Error('InvalidServiceDependencyError:: '+ service + ' is not a valid service');
+				throw new Error('InvalidServiceDependencyError:: ' + service + ' is not a valid service');
 			}
 			var dependentSections = this.invalidateMap[service];
 			_.each(this.cache, function (entry, key) {
@@ -200,7 +205,7 @@ define(function (require) {
 		 *
 		 * Makes a request from the server by first constructing the model or collection, then issuing a fetch
 		 */
-		_requestFromServer: function (Constructor, name, params, success, error) {
+		_requestFromServer: function (Constructor, name, params, options) {
 			if (!Constructor) {
 				throw new Error('CacheConstructorNotFound:: Could not locate constructor for ' + name);
 			}
@@ -211,8 +216,8 @@ define(function (require) {
 			}
 
 			resource.serverRead({
-				success: success || Constructor.prototype.readSuccess || this._noop,
-				error: error || Constructor.prototype.readError || this._noop
+				success: options.success || Constructor.prototype.readSuccess || this._noop,
+				error: options.error || Constructor.prototype.readError || this._noop
 			});
 			return resource;
 		}
