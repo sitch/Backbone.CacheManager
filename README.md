@@ -1,1 +1,1 @@
-*Backbone.CacheManager
+Backbone.CacheManager
