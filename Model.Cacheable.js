@@ -3,6 +3,7 @@ define(function (require) {
 
 	var _ = require('underscore');
 	var Backbone = require('backbone');
+	
 	var BaseTrait = require('./Trait.Base');
 	var ForbiddenTrait = require('./Trait.Forbidden');
 	var InvalidationTrait = require('./Trait.Invalidation');
