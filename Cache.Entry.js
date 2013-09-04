@@ -37,7 +37,6 @@ define(function (require) {
 		refresh: function () {
 			if (!this.isValid && !this.isRefreshing) {
 				this.manager._log('  RE-FRESH  ', this.name, this.entry);
-
 				this.isRefreshing = true;
 				this.entry.trigger('cache:refresh:begin');
 

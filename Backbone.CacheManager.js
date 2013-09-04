@@ -29,7 +29,8 @@ define(function (require) {
 		this.constructorMap = options.constructorMap;
 		this.invalidateMap = this._buildInvalidationMap(options.invalidateMap);
 
-		// this.log = options.log || this._noop;
+		// options.logger = debug.info;
+		this.logger = options.loggingEnabled && _.isFunction(options.logger) ? options.logger : this._noop;
 
 		this.cache = {};
 		return this;
@@ -66,7 +67,7 @@ define(function (require) {
 			return resource;
 		},
 		/*
-		 *
+		 * Prepare
 		 */
 		prepare: function (name, params) {
 			var hash = this._generateHash(name, params);
@@ -171,7 +172,7 @@ define(function (require) {
 			var right = (name.length % 2) ? left + 1 : left;
 			name = padding.split('', left).join('') + name + padding.split('', right).join('');
 
-			debug.info(['<CACHE> ' + method, name, url].join(' : '));
+			this.logger(['<CACHE> ' + method, name, url].join(' : '));
 		},
 		/*
 		 * _buildInvalidationMap
